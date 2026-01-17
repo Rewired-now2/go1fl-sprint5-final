@@ -17,13 +17,18 @@ type DaySteps struct {
 }
 
 func (ds *DaySteps) Parse(datastring string) error {
-	datastring = strings.TrimSpace(datastring)
+	// Проверяем наличие пробела перед или после запятой
+	if strings.Contains(datastring, " ,") || strings.Contains(datastring, ", ") {
+		return errors.New("неверный формат данных: пробелы вокруг запятой")
+	}
+
+	// Теперь разделяем строку по запятой
 	parts := strings.Split(datastring, ",")
 	if len(parts) != 2 {
 		return errors.New("неверный формат данных: должно быть два параметра (шаги и продолжительность)")
 	}
 
-	stepsStr := strings.TrimSpace(parts[0])
+	stepsStr := parts[0]
 	if strings.Contains(stepsStr, " ") {
 		return errors.New("неверное количество шагов: лишние пробелы")
 	}
@@ -37,7 +42,7 @@ func (ds *DaySteps) Parse(datastring string) error {
 	}
 	ds.Steps = steps
 
-	durationStr := strings.TrimSpace(parts[1])
+	durationStr := parts[1]
 	if strings.Contains(durationStr, " ") {
 		return errors.New("неверная продолжительность: лишние пробелы")
 	}
@@ -86,7 +91,7 @@ func (ds DaySteps) ActionInfo() (string, error) {
 }
 
 func parseSteps(stepsStr string) (int, error) {
-	steps, err := strconv.Atoi(strings.TrimSpace(stepsStr))
+	steps, err := strconv.Atoi(stepsStr)
 	if err != nil {
 		return 0, fmt.Errorf("неверное количество шагов: %w", err)
 	}
@@ -97,7 +102,7 @@ func parseSteps(stepsStr string) (int, error) {
 }
 
 func parseDuration(durationStr string) (time.Duration, error) {
-	duration, err := time.ParseDuration(strings.TrimSpace(durationStr))
+	duration, err := time.ParseDuration(durationStr)
 	if err != nil {
 		return 0, fmt.Errorf("неверный формат продолжительности: %w", err)
 	}
