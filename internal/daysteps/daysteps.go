@@ -17,12 +17,11 @@ type DaySteps struct {
 }
 
 func (ds *DaySteps) Parse(datastring string) error {
-	// Проверяем наличие пробела перед или после запятой
+
 	if strings.Contains(datastring, " ,") || strings.Contains(datastring, ", ") {
 		return errors.New("неверный формат данных: пробелы вокруг запятой")
 	}
 
-	// Теперь разделяем строку по запятой
 	parts := strings.Split(datastring, ",")
 	if len(parts) != 2 {
 		return errors.New("неверный формат данных: должно быть два параметра (шаги и продолжительность)")
